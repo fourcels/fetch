@@ -1,0 +1,30 @@
+{
+  "name": "@fourcels/fetch",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "fetch advance",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fetch"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fourcels/fetch.git"
+  },
+  "homepage": "https://github.com/fourcels/fetch",
+  "author": "kiyan <fourcels@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "qs": "^6.11.2"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.2"
+  }
+}
