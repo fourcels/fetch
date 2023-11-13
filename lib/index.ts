@@ -1,25 +1,18 @@
-import qs from 'qs'
-const { IStringifyOptions } = qs
+import qs, { IStringifyOptions } from 'qs'
 
-/**
- * @callback AuthFunc
- * @param {Headers} headers
- * @returns {void}
- */
+type AuthFunc = (header: Headers) => void
 
-/**
- * @typedef OptionsBase
- * @property {boolean | AuthFunc} [auth = true] - default: true
- * @property {*} [params]
- * @property {*} [body]
- * @property {IStringifyOptions} [stringifyOptions]
- */
+type Params = Record<string, any>
+type Body = Record<string, any> | BodyInit
 
-/**
- * @typedef {OptionsBase | RequestInit} Options
- */
+type Options = {
+    auth?: boolean | AuthFunc
+    params?: Params
+    body?: Body,
+    stringifyOptions?: IStringifyOptions
+} & Omit<RequestInit, 'body'>
 
-function isPOJO(arg) {
+function isPOJO(arg: any): arg is Record<string, any> {
     if (arg == null || typeof arg !== 'object') {
         return false;
     }
@@ -34,20 +27,15 @@ function isPOJO(arg) {
  * fetch advance
  */
 export class Fetch {
-    /**
-     * @param {string} [baseUrl]
-     * @param {AuthFunc} [authFunc]
-     */
-    constructor(baseUrl, authFunc) {
+
+    private baseUrl?: string;
+    private authFunc?: AuthFunc;
+    constructor(baseUrl?: string, authFunc?: AuthFunc) {
         this.baseUrl = baseUrl
         this.authFunc = authFunc
     }
 
-    /**
-     * @param {string} url
-     * @param {Options} [options]
-     */
-    async request(url, options = {}) {
+    async request(url: string, options: Options = {}) {
         let { headers: customHeaders, stringifyOptions, auth = true, params, body, ...rest } = options
 
         if (this.baseUrl && url.startsWith('/')) {
@@ -98,12 +86,8 @@ export class Fetch {
         return { res, data }
     }
 
-    /**
-     * @param {string} url
-     * @param {*} [params]
-     * @param {Options} [options]
-     */
-    GET(url, params, options) {
+
+    GET(url: string, params?: Params, options?: Options) {
         return this.request(url, {
             method: 'GET',
             params,
@@ -111,12 +95,7 @@ export class Fetch {
         })
     }
 
-    /**
-     * @param {string} url
-     * @param {*} [body]
-     * @param {Options} [options]
-     */
-    POST(url, body, options) {
+    POST(url: string, body?: Body, options?: Options) {
         return this.request(url, {
             method: 'POST',
             body,
@@ -124,12 +103,7 @@ export class Fetch {
         })
     }
 
-    /**
-     * @param {string} url
-     * @param {*} [body]
-     * @param {Options} [options]
-     */
-    PUT(url, body, options) {
+    PUT(url: string, body?: Body, options?: Options) {
         return this.request(url, {
             method: 'PUT',
             body,
@@ -137,12 +111,7 @@ export class Fetch {
         })
     }
 
-    /**
-     * @param {string} url
-     * @param {*} [body]
-     * @param {Options} [options]
-     */
-    PATCH(url, body, options) {
+    PATCH(url: string, body?: Body, options?: Options) {
         return this.request(url, {
             method: 'PATCH',
             body,
@@ -150,12 +119,7 @@ export class Fetch {
         })
     }
 
-    /**
-     * @param {string} url
-     * @param {*} [params]
-     * @param {Options} [options]
-     */
-    DELETE(url, params, options) {
+    DELETE(url: string, params?: Params, options?: Options) {
         return this.request(url, {
             method: 'DELETE',
             params,

@@ -1,4 +1,4 @@
-import fetch, { Fetch } from '../lib/index.js'
+import fetch, { Fetch } from '../dist/index.js'
 
 async function defaultFetch() {
     const { data } = await fetch.GET("https://dummyjson.com/products", { limit: 10 })
