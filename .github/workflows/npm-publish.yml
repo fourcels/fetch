@@ -5,7 +5,7 @@ name: Node.js Package
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   publish-npm:
@@ -16,7 +16,16 @@ jobs:
         with:
           node-version: 18
           registry-url: https://registry.npmjs.org/
-      - run: npm version ${{github.ref_name}} --no-git-tag-version 
-      - run: npm publish
+
+      - name: build
+        run: |
+          corepack enable
+          pnpm install
+          pnpm build
+
+      - name: publish
+        run: |
+          npm version ${{github.ref_name}} --no-git-tag-version
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
