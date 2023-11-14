@@ -1,6 +1,7 @@
 import qs, { IStringifyOptions } from 'qs'
 
 type AuthFunc = (header: Headers) => void
+type HandleError = (res: Response, data: any) => void
 
 type Params = Record<string, any>
 type Body = Record<string, any> | BodyInit
@@ -11,6 +12,12 @@ type Options = {
     body?: Body,
     stringifyOptions?: IStringifyOptions
 } & Omit<RequestInit, 'body'>
+
+
+type FetchOptions = {
+    authFunc?: AuthFunc
+    handleError?: HandleError
+}
 
 function isPOJO(arg: any): arg is Record<string, any> {
     if (arg == null || typeof arg !== 'object') {
@@ -30,9 +37,12 @@ export class Fetch {
 
     private baseUrl?: string;
     private authFunc?: AuthFunc;
-    constructor(baseUrl?: string, authFunc?: AuthFunc) {
+    private handleError?: HandleError;
+    constructor(baseUrl?: string, options: FetchOptions = {}) {
+        const { authFunc, handleError } = options
         this.baseUrl = baseUrl
         this.authFunc = authFunc
+        this.handleError = handleError
     }
 
     async request(url: string, options: Options = {}) {
@@ -79,6 +89,10 @@ export class Fetch {
         } else {
             data = await res.blob()
         }
+        if (!res.ok) {
+            this.handleError?.(res, data)
+        }
+
         return { res, data }
     }
 

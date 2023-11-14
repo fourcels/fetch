@@ -6,8 +6,13 @@ async function defaultFetch() {
 }
 
 async function customFetch() {
-    const fetcher = new Fetch("https://dummyjson.com", (headers) => {
-        headers.append("Authorization", "Bearer token")
+    const fetcher = new Fetch("https://dummyjson.com", {
+        authFunc(headers) {
+            headers.append("Authorization", "Bearer token")
+        },
+        handleError(res, data) {
+            console.log(data)
+        }
     })
     const { data } = await fetcher.POST("/products/add", {
         title: "BMW Pencil"
