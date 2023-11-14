@@ -93,7 +93,7 @@ export class Fetch {
             this.handleError?.(res, data)
         }
 
-        return { res, data }
+        return { res, data, ok: res.ok }
     }
 
 
