@@ -70,10 +70,6 @@ export class Fetch {
             headers,
             ...rest,
         })
-        if (!res.ok) {
-            const { error } = await res.json()
-            throw new Error(error)
-        }
         const contentType = res.headers.get("Content-Type") || ""
         let data
         if (contentType.includes('json')) {
